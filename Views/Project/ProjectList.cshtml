@@ -1,0 +1,83 @@
+﻿@model IEnumerable<TMS.Models.Project>
+
+@{
+    ViewData["Title"] = "Project List";
+}
+
+<h2>Project List</h2>
+
+<a asp-action="CreateProject" class="btn btn-primary mb-3">Create New Project</a>
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Project Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            var collapseId = $"collapse-{project.ProjectId}";
+
+            <tr class="project-row" data-collapse-id="@collapseId" style="cursor:pointer;">
+                <td>@project.ProjectName</td>
+                <td>@project.StartDate.ToShortDateString()</td>
+                <td>@project.EndDate.ToShortDateString()</td>
+                <td>
+                    <a asp-action="AddAssignment" asp-route-id="@project.ProjectId" class="btn btn-sm btn-primary">Add Assignment</a>
+                    <a asp-action="EditProject" asp-route-id="@project.ProjectId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="DeleteProject" asp-route-id="@project.ProjectId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+
+            <tr class="collapse" id="@collapseId">
+                <td colspan="4">
+                    @if (project.Assignments != null && project.Assignments.Any())
+                    {
+                        <div class="p-2">
+                            <h5>Assignments</h5>
+                            <ul class="list-group">
+                                @foreach (var assignment in project.Assignments)
+                                {
+                                    <li class="list-group-item">
+                                        <strong>@assignment.Name</strong> - @assignment.Description
+                                        <br />
+                                        <small>Assigned to: @assignment.User?.FirstName @assignment.User?.LastName</small>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No assignments for this project.</p>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.project-row').forEach(row => {
+            row.addEventListener('click', function (e) {
+                // prevent toggle if clicked element is a button or link
+                if (e.target.closest('a') || e.target.closest('button')) return;
+
+                const collapseId = this.getAttribute('data-collapse-id');
+                const collapseElement = document.getElementById(collapseId);
+
+                if (collapseElement.classList.contains('show')) {
+                    bootstrap.Collapse.getInstance(collapseElement).hide();
+                } else {
+                    new bootstrap.Collapse(collapseElement);
+                }
+            });
+        });
+    </script>
+}
+

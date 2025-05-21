@@ -1,0 +1,44 @@
+﻿@model UserDashboardViewModel
+@{
+    ViewData["Title"] = "User Dashboard";
+}
+
+<h2>Welcome, @Model.UserName</h2>
+
+@foreach (var project in Model.ProjectAssignments)
+{
+    <div class="card my-3">
+        <div class="card-header bg-primary text-white">
+            <h4>@project.ProjectName</h4>
+            <small>@project.ProjectDescription</small>
+        </div>
+        <div class="card-body">
+            @if (project.Assignments.Any())
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Assignment</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var assignment in project.Assignments)
+                        {
+                            <tr>
+                                <td>@assignment.AssignmentName</td>
+                                <td>@assignment.StartDate.ToShortDateString()</td>
+                                <td>@assignment.EndDate.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No assignments yet.</p>
+            }
+        </div>
+    </div>
+}

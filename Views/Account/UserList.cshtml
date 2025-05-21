@@ -1,0 +1,39 @@
+﻿@using TMS.Models.UserModels
+@model IEnumerable<User>
+@{
+    ViewData["Title"] = "User List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New User</a>
+</p>
+
+<table class="table table-hover table-striped">
+    <tr>
+        <th>Full Name</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Email Confirmed</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.FirstName  @user.LastName</td>
+            <td>@user.Address</td>
+            <td>@user.Email</td>
+            <td>@(user.Department != null ? user.Department.Name : "N/A")</td>
+            <td>@user.EmailConfirmed</td>
+            <td>
+                <a asp-action="UpdateUser" asp-route-id="@user.Id">Edit</a> |
+                <a asp-action="DeleteUser" asp-route-id="@user.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+
+
